@@ -1,0 +1,30 @@
+# Operating System Junk
+Thumbs.db
+.DS_Store
+
+# Dependency & Build folders
+node_modules
+vendor
+dist
+.phpunit.cache
+.output
+.data
+.nuxt
+.nitro
+.cache
+
+# Code Editors or IDE
+.idea
+.vscode
+.zed
+.nova
+.fleet
+
+# Logs
+logs
+*.log
+
+# Local env files
+.env
+.env.*
+!.env.example

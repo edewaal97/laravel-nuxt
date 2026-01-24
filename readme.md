@@ -1,0 +1,1 @@
+# Check the readme files in the folders /api and /frontend for more information on how to run this project.
