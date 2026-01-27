@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
+use Override;
 
-class ArticleResource extends JsonResource
+final class ArticleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         return [
@@ -26,7 +28,7 @@ class ArticleResource extends JsonResource
                 'content' => $this->body,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
-            ])
+            ]),
         ];
     }
 }
