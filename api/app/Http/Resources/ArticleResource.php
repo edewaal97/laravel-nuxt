@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Override;
 
+/**
+ * @mixin Article
+ */
 final class ArticleResource extends JsonResource
 {
     /**
@@ -18,17 +22,17 @@ final class ArticleResource extends JsonResource
     #[Override]
     public function toArray(Request $request): array
     {
-        return [
+        $base = [
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-
-            $this->mergeWhen($request->routeIs('articles.show'), [
-                'banner' => $this->banner_image,
-                'content' => $this->body,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
-            ]),
         ];
+
+        return array_merge($base, $request->routeIs('articles.show') ? [
+            'banner' => $this->banner_image,
+            'content' => $this->body,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ] : []);
     }
 }
