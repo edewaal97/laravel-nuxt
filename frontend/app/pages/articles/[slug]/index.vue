@@ -18,7 +18,7 @@ const { data:article, pending, error } = await useFetch(`${config.public.apiBase
           <UPageSection :title="`${article.title}`">
             <img class="mx-auto" :src="`${article.banner}`" :alt="`banner image for ${article.title}`">
             <USeparator icon="i-simple-icons-nuxtdotjs" />
-            <div>{{ article.content }}</div>
+            <div v-html="article.content"></div>
           </UPageSection>
         </UContainer>
       </div>

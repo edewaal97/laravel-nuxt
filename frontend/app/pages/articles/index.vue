@@ -62,6 +62,7 @@ const columns: TableColumn<Article>[] = [
         </UPageSection>
       </UContainer>
       <pre>{{ articles }}</pre>
+      <uButton to="/articles/create" color="primary">Artikel Toevoegen</uButton>
     </div>
   </div>
 </template>

@@ -16,7 +16,7 @@ const { data:article, pending, error } = await useFetch(`${config.public.apiBase
     <div v-else>
       <h1 class="text-xl font-bold">{{ article.title }}</h1>
       <img :src="`${article.banner}`" :alt="`banner image for ${article.title}`">
-      <div>{{ article.content }}</div>
+      <Editor v-model="article.content" />
     </div>
   </div>
 </template>
