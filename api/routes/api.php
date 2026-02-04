@@ -20,3 +20,5 @@ Route::post('/articles', [ArticleController::class, 'store'])->name('articles.st
 Route::get('/articles/{article:slug}', function (Article $article) {
     return $article->toResource();
 })->name('articles.show');
+
+Route::delete('/articles/{article:slug}', [ArticleController::class, 'destroy'])->name('articles.destroy');
