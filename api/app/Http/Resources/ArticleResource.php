@@ -29,8 +29,8 @@ final class ArticleResource extends JsonResource
         ];
 
         return array_merge($base, $request->routeIs('articles.show') ? [
-            'banner' => $this->banner_image,
-            'content' => $this->body,
+            'banner_image' => $this->banner_image,
+            'body' => $this->body,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ] : []);

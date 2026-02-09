@@ -15,10 +15,15 @@ Route::get('/articles', function () {
     return Article::select('id', 'title', 'slug')->get()->toResourceCollection();
 })->name('articles.index');
 
-Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+Route::post('/articles', [ArticleController::class, 'store'])
+    ->name('articles.store');
 
 Route::get('/articles/{article:slug}', function (Article $article) {
     return $article->toResource();
 })->name('articles.show');
 
-Route::delete('/articles/{article:slug}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::put('/articles/{article:slug}', [ArticleController::class, 'update'])
+    ->name('articles.update');
+
+Route::delete('/articles/{article:slug}', [ArticleController::class, 'destroy'])
+    ->name('articles.destroy');

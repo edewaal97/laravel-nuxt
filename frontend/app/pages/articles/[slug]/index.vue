@@ -1,7 +1,11 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 const route = useRoute()
-const { data:article, pending, error } = await useFetch(`${config.public.apiBase}/api/articles/${route.params.slug}`, {
+const {
+  data: article,
+  pending,
+  error
+} = await useFetch(`${config.public.apiBase}/api/articles/${route.params.slug}`, {
   transform: (response) => response.data
 })
 </script>
@@ -16,9 +20,12 @@ const { data:article, pending, error } = await useFetch(`${config.public.apiBase
       <div v-else>
         <UContainer>
           <UPageSection :title="`${article.title}`">
-            <img class="mx-auto" :src="`${article.banner}`" :alt="`banner image for ${article.title}`">
-            <USeparator icon="i-simple-icons-nuxtdotjs" />
-            <div v-html="article.content"></div>
+            <img
+              class="mx-auto"
+              :src="`${article.banner_image}`"
+              :alt="`banner image for ${article.title}`"
+            >
+            <div v-html="article.body"></div>
           </UPageSection>
         </UContainer>
       </div>

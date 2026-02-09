@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
@@ -13,14 +14,18 @@ class ArticleController extends Controller
     {
         $article = Article::create($request->validated());
 
-        return (new ArticleResource($article))->response()->setStatusCode(201);
+        return (new ArticleResource($article))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     public function update(ArticleRequest $request, Article $article)
     {
         $article->update($request->validated());
 
-        return new ArticleResource($article);
+        return (new ArticleResource($article))
+            ->response()
+            ->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
     public function destroy(Article $article)
