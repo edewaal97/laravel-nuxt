@@ -1,8 +1,10 @@
 <script setup>
-const config = useRuntimeConfig()
-const { data, pending, error } = await useFetch(`${config.public.apiBase}/`, {
-  key: 'laravel-version'
-})
+
+const { data, status, error } = await useAsyncData(
+  'laravel-version',
+  () => useNuxtApp().$apiFetch('/')
+)
+
 </script>
 
 <template>
@@ -33,9 +35,9 @@ const { data, pending, error } = await useFetch(`${config.public.apiBase}/`, {
     </UPageSection>
 
     <UPageSection>
-      <div v-if="pending">Loading...</div>
+      <div v-if="status === 'pending'">Loading...</div>
 
-      <div v-else-if="error">
+      <div v-else-if="status === 'error'">
         <p>Error fetching data: {{ error.message }}</p>
       </div>
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import {UButton} from "#components";
+import { UButton } from "#components";
+
+const { $apiFetch } = useNuxtApp()
 
 type Article = {
   id: string
@@ -8,15 +10,15 @@ type Article = {
   slug: string
 }
 
-const config = useRuntimeConfig()
 const toast = useToast()
 
 const {
   data:articles,
-  pending,
+  status,
   error,
   refresh
-} = await useFetch<Article[]>(`${config.public.apiBase}/api/articles`, {
+} = await useFetch<Article[]>('/api/articles', {
+  $fetch: $apiFetch,
   transform: (response) => response.data
 })
 
@@ -27,7 +29,7 @@ async function onDelete(slug: string) {
 
   deletingId.value = slug
   try {
-    await $fetch(`${config.public.apiBase}/api/articles/${slug}`, {
+    await $apiFetch(`/api/articles/${slug}`, {
       method: 'DELETE'
     })
 
@@ -49,8 +51,8 @@ const columns: TableColumn<Article>[] = [
 
 <template>
   <div class="container">
-    <div v-if="pending">Loading posts...</div>
-    <div v-else-if="error">
+    <div v-if="status === 'pending'">Loading posts...</div>
+    <div v-else-if="status === 'error'">
       <p>Error loading data: {{ error.message }}</p>
     </div>
 

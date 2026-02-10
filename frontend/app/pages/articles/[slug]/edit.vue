@@ -1,7 +1,8 @@
 <script setup lang="ts">
+const { $apiFetch } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
-const config = useRuntimeConfig()
+const toast = useToast()
 
 const form = reactive({
   title: '',
@@ -13,8 +14,11 @@ const errors = ref<Record<string, string[]>>({})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
 
-const { data, pending } = await useAsyncData(`article-${route.params.slug}`, () =>
-  $fetch(`${config.public.apiBase}/api/articles/${route.params.slug}`)
+const {
+  data,
+  status
+} = await useAsyncData(`article-${route.params.slug}`, () =>
+  $apiFetch(`/api/articles/${route.params.slug}`)
 )
 
 if (data.value) {
@@ -29,9 +33,15 @@ async function updateArticle() {
   errors.value = {}
 
   try {
-    await $fetch(`${config.public.apiBase}/api/articles/${route.params.slug}`, {
+    await $apiFetch(`/api/articles/${route.params.slug}`, {
       method: 'PUT',
       body: form,
+    })
+
+    toast.add({
+      title: 'Succes',
+      description: 'Artikel opgeslagen',
+      color: 'success'
     })
 
     await router.push({ path: '/articles' })
@@ -47,7 +57,7 @@ async function updateArticle() {
 
 <template>
   <UContainer>
-    <div v-if="pending" class="py-10 text-center">
+    <div v-if="status === 'pending'" class="py-10 text-center">
       <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-gray-400" />
     </div>
 

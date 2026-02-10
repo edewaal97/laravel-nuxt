@@ -1,29 +1,36 @@
 <script setup lang="ts">
+const { $apiFetch } = useNuxtApp()
+const router = useRouter()
+const toast = useToast()
+
 const form = reactive({
   title: '',
   body: '',
 })
 
 const isLoading = ref(false);
-const errors = ref([]);
+const errors = ref<Record<string, string[]>>({})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
 
 async function createArticle() {
-  const config = useRuntimeConfig()
-  const router = useRouter()
-
   isLoading.value = true
-  errors.value = []
+  errors.value = {}
 
   try {
-    await $fetch(`${config.public.apiBase}/api/articles`, {
+    await $apiFetch('/api/articles', {
       method: 'POST',
       body: form,
     })
 
     form.title = ''
     form.body = ''
+
+    toast.add({
+      title: 'Succes',
+      description: 'Artikel toegevoegd',
+      color: 'success'
+    })
 
     await router.push({ path: '/articles' })
   } catch (e: any) {
@@ -54,7 +61,10 @@ async function createArticle() {
         />
       </UFormField>
 
-      <UButton type="submit">Maak artikel</UButton>
+      <UButton
+        type="submit"
+        :loading="isLoading"
+      >Maak artikel</UButton>
     </UForm>
   </UContainer>
 </template>

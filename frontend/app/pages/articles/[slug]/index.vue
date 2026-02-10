@@ -1,19 +1,21 @@
 <script setup lang="ts">
-const config = useRuntimeConfig()
+const { $apiFetch } = useNuxtApp()
 const route = useRoute()
+
 const {
   data: article,
-  pending,
+  status,
   error
-} = await useFetch(`${config.public.apiBase}/api/articles/${route.params.slug}`, {
+} = await useFetch(`/api/articles/${route.params.slug}`, {
+  $fetch: $apiFetch,
   transform: (response) => response.data
 })
 </script>
 
 <template>
     <div>
-      <div v-if="pending">Loading article...</div>
-      <div v-else-if="error">
+      <div v-if="status === 'pending'">Loading article...</div>
+      <div v-else-if="status === 'error'">
         <p>Error loading data: {{ error.message }}</p>
       </div>
 
