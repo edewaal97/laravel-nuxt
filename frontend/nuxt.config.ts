@@ -29,6 +29,15 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '', // Default value, overridden by NUXT_PUBLIC_API_BASE
+      frontendUrl: '', // Default value, overridden by NUXT_PUBLIC_FRONTEND_URL
+    }
+  },
+
+  vite: {
+    server: {
+      allowedHosts: process.env.NUXT_ALLOWED_HOST
+        ? [process.env.NUXT_ALLOWED_HOST]
+        : []
     }
   }
 })

@@ -35,6 +35,8 @@ useSeoMeta({
       </template>
 
       <template #right>
+        <NuxtLink to="/login">Login</NuxtLink>
+        <!-- TODO: create logout button and functionality -->
         <UColorModeButton />
       </template>
     </UHeader>
