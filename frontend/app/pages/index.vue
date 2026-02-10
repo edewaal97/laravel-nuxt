@@ -43,8 +43,7 @@ const { data, status, error } = await useAsyncData(
 
       <UPageCTA
         v-else
-        :title="`Laravel Version: ${data.Laravel}`" />
-
+        :title="`Laravel Version: ${data?.Laravel}`" />
     </UPageSection>
   </div>
 </template>

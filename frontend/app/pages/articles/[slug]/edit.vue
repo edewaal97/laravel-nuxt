@@ -16,7 +16,8 @@ const getError = (path: string) => errors.value?.[path]?.[0]
 
 const {
   data,
-  status
+  status,
+  error
 } = await useAsyncData(`article-${route.params.slug}`, () =>
   $apiFetch(`/api/articles/${route.params.slug}`)
 )
@@ -59,6 +60,10 @@ async function updateArticle() {
   <UContainer>
     <div v-if="status === 'pending'" class="py-10 text-center">
       <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-gray-400" />
+    </div>
+
+    <div v-if="status === 'error'" class="py-10 text-center">
+      <p>Error loading data: {{ error.message }}</p>
     </div>
 
     <div class="div" v-else>
