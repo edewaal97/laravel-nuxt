@@ -4,12 +4,6 @@ import { UButton } from "#components";
 
 const { $apiFetch } = useNuxtApp()
 
-type Article = {
-  id: string
-  title: string
-  slug: string
-}
-
 const toast = useToast()
 
 const {
