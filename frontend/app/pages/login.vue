@@ -4,7 +4,6 @@ definePageMeta({
 })
 
 const { $apiFetch } = useNuxtApp()
-const router = useRouter()
 const toast = useToast()
 
 const form = reactive({
@@ -47,7 +46,7 @@ async function login() {
       color: 'success'
     })
 
-    await router.replace({ path: '/' })
+    await navigateTo( '/' )
   } catch (e: any) {
     if (e.response?._data?.errors) {
       errors.value = e.response._data.errors;

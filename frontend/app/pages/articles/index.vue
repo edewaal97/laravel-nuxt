@@ -3,6 +3,7 @@ import type { TableColumn } from '@nuxt/ui'
 import { UButton } from "#components";
 
 const { $apiFetch } = useNuxtApp()
+const { isLoggedIn } = useAuth()
 
 const toast = useToast()
 const title = ref('Artikelen')
@@ -63,11 +64,13 @@ const columns: TableColumn<Article>[] = [
             <template #actions-cell="{ row: { original: article } }">
               <div class="flex gap-2">
                 <UButton
+                  v-if="isLoggedIn"
                   icon="lucide:pencil"
                   variant="ghost"
                   :to="`/articles/${article.slug}/edit`"
                 />
                 <UButton
+                  v-if="isLoggedIn"
                   icon="lucide:trash-2"
                   color="error"
                   variant="ghost"

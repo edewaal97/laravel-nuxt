@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { $apiFetch } = useNuxtApp()
 const route = useRoute()
-const router = useRouter()
 const toast = useToast()
 
 const form = reactive({
@@ -57,7 +56,7 @@ async function updateArticle() {
       color: 'success'
     })
 
-    await router.push({ path: '/articles' })
+    await navigateTo('/articles' )
   } catch (e: any) {
     if (e.response?._data?.errors) {
       errors.value = e.response._data.errors
