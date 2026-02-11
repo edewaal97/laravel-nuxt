@@ -1,4 +1,13 @@
 <script setup>
+const { $apiFetch } = useNuxtApp()
+const { clearUser, fetchUser, isLoggedIn } = useAuth()
+const toast = useToast()
+const router = useRouter()
+
+onMounted(() => {
+  fetchUser()
+})
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -23,6 +32,24 @@ useSeoMeta({
   twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
   twitterCard: 'summary_large_image'
 })
+
+async function logout() {
+  try {
+    await $apiFetch('/logout', { method: 'POST' })
+
+    toast.add({
+      title: 'Succes',
+      description: 'Succesvol uitgelogd',
+      color: 'success'
+    })
+
+  } catch (e) {
+    console.error(e)
+  } finally {
+    clearUser()
+    await router.replace({ path: '/' })
+  }
+}
 </script>
 
 <template>
@@ -36,8 +63,26 @@ useSeoMeta({
       </template>
 
       <template #right>
-        <NuxtLink to="/login">Login</NuxtLink>
-        <!-- TODO: create logout button and functionality -->
+        <UButton
+          v-if="!isLoggedIn"
+          to="/login"
+          variant="ghost"
+          color="neutral"
+        >Login</UButton>
+        <UButton
+          v-if="isLoggedIn"
+          to="/profile"
+          variant="ghost"
+          color="neutral"
+        >Profile</UButton>
+
+        <UButton
+          v-if="isLoggedIn"
+          variant="ghost"
+          @click="logout()"
+          color="neutral"
+        >Uitloggen</UButton>
+
         <UColorModeButton />
       </template>
     </UHeader>

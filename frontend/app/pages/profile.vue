@@ -1,12 +1,9 @@
 <script setup lang="ts">
-const user = ref(null)
-
-const { $apiFetch } = useNuxtApp()
-
-onMounted(async () => {
-  const response = await $apiFetch('/api/user')
-  user.value = response
+definePageMeta({
+  middleware: ['auth']
 })
+
+const { user } = useAuth()
 
 </script>
 

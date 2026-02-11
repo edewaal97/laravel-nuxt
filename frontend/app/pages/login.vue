@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['guest']
+})
+
 const { $apiFetch } = useNuxtApp()
 const router = useRouter()
 const toast = useToast()
@@ -27,6 +31,10 @@ async function login() {
       method: 'POST',
       body: form,
     })
+
+    const user = await $apiFetch('/api/user')
+    const { setUser } = useAuth()
+    setUser(user)
 
     toast.add({
       title: 'Succes',
