@@ -35,7 +35,7 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
-        Gate::authorize('destroy', $article);
+        Gate::authorize('delete', $article);
 
         $article->delete();
         return response()->noContent();
