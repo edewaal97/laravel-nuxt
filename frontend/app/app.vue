@@ -26,6 +26,7 @@ useSeoMeta({
 </script>
 
 <template>
+  <NuxtLoadingIndicator />
   <UApp>
     <UHeader :toggle="false">
       <template #left>
