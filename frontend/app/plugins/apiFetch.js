@@ -6,12 +6,12 @@ export default defineNuxtPlugin({
       baseURL: config.public.apiBase,
       credentials: 'include',
       async onRequest({ options }) {
-        const xsrfToken = useCookie("XSRF-TOKEN").value
+        const xsrfToken = useCookie('XSRF-TOKEN').value
 
         options.headers = {
           ...options.headers,
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
+          'X-Requested-With': 'XMLHttpRequest'
         }
 
         if (xsrfToken) {

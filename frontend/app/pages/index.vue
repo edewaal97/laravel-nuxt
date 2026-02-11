@@ -1,10 +1,8 @@
 <script setup>
-
 const { data, status, error } = await useAsyncData(
   'laravel-version',
   () => useNuxtApp().$apiFetch('/')
 )
-
 </script>
 
 <template>
@@ -35,7 +33,9 @@ const { data, status, error } = await useAsyncData(
     </UPageSection>
 
     <UPageSection>
-      <div v-if="status === 'pending'">Loading...</div>
+      <div v-if="status === 'pending'">
+        Loading...
+      </div>
 
       <div v-else-if="status === 'error'">
         <p>Error fetching data: {{ error.message }}</p>
@@ -43,7 +43,8 @@ const { data, status, error } = await useAsyncData(
 
       <UPageCTA
         v-else
-        :title="`Laravel Version: ${data?.Laravel}`" />
+        :title="`Laravel Version: ${data?.Laravel}`"
+      />
     </UPageSection>
   </div>
 </template>

@@ -5,7 +5,7 @@ const toast = useToast()
 
 const form = reactive({
   title: '',
-  body: '',
+  body: ''
 })
 
 const isLoading = ref(false)
@@ -27,7 +27,7 @@ if (error.value) {
       description: `Dit artikel (${route.params.slug}) kan niet gevonden worden.`,
       color: 'success'
     })
-    await navigateTo('/articles' )
+    await navigateTo('/articles')
   }
 }
 
@@ -36,7 +36,7 @@ const title = ref('Edit Article')
 if (data.value) {
   Object.assign(form, {
     title: data.value.data.title,
-    body: data.value.data.body,
+    body: data.value.data.body
   })
   title.value = `'Edit Article ${data.value.data.title}'`
 }
@@ -52,7 +52,7 @@ async function updateArticle() {
   try {
     await $apiFetch(`/api/articles/${route.params.slug}`, {
       method: 'PUT',
-      body: form,
+      body: form
     })
 
     toast.add({
@@ -61,7 +61,7 @@ async function updateArticle() {
       color: 'success'
     })
 
-    await navigateTo('/articles' )
+    await navigateTo('/articles')
   } catch (e: any) {
     const statusCode = e.response?.status
 
@@ -72,7 +72,6 @@ async function updateArticle() {
         color: 'error'
       })
       return navigateTo('/articles')
-
     }
 
     if (e.response?._data?.errors) {
@@ -86,34 +85,59 @@ async function updateArticle() {
 
 <template>
   <UContainer>
-    <div v-if="status === 'pending'" class="py-10 text-center">
-      <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-gray-400" />
+    <div
+      v-if="status === 'pending'"
+      class="py-10 text-center"
+    >
+      <UIcon
+        name="i-heroicons-arrow-path"
+        class="animate-spin h-8 w-8 text-gray-400"
+      />
     </div>
 
-    <div v-if="status === 'error'" class="py-10 text-center">
+    <div
+      v-if="status === 'error'"
+      class="py-10 text-center"
+    >
       <p>Error loading data: {{ error.message }}</p>
     </div>
 
-    <div class="div" v-else>
-      <UForm :state="form" @submit="updateArticle" class="space-y-4">
-        <UFormField label="Titel" :error="getError('title') || getError('slug')">
+    <div
+      v-else
+      class="div"
+    >
+      <UForm
+        :state="form"
+        class="space-y-4"
+        @submit="updateArticle"
+      >
+        <UFormField
+          label="Titel"
+          :error="getError('title') || getError('slug')"
+        >
           <UInput
             v-model="form.title"
             name="title"
           />
         </UFormField>
 
-        <UFormField label="Body" :error="getError('body')">
+        <UFormField
+          label="Body"
+          :error="getError('body')"
+        >
           <Editor
+            id="body"
             v-model="form.body"
             name="body"
-            id="body"
           />
         </UFormField>
 
         <pre>{{ form.body }}</pre>
 
-        <UButton type="submit" :loading="isLoading">
+        <UButton
+          type="submit"
+          :loading="isLoading"
+        >
           Update artikel
         </UButton>
       </UForm>

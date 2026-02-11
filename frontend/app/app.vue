@@ -16,7 +16,7 @@ useHead({
   ],
   link: [
     { rel: 'icon', href: '/favicon.ico' }
-  ],
+  ]
 })
 
 async function logout() {
@@ -28,12 +28,11 @@ async function logout() {
       description: 'Succesvol uitgelogd',
       color: 'success'
     })
-
   } catch (e) {
     console.error(e)
   } finally {
     clearUser()
-    await navigateTo( '/' )
+    await navigateTo('/')
   }
 }
 </script>
@@ -54,20 +53,26 @@ async function logout() {
           to="/login"
           variant="ghost"
           color="neutral"
-        >Login</UButton>
+        >
+          Login
+        </UButton>
         <UButton
           v-if="isLoggedIn"
           to="/profile"
           variant="ghost"
           color="neutral"
-        >Profile</UButton>
+        >
+          Profile
+        </UButton>
 
         <UButton
           v-if="isLoggedIn"
           variant="ghost"
-          @click="logout()"
           color="neutral"
-        >Uitloggen</UButton>
+          @click="logout()"
+        >
+          Uitloggen
+        </UButton>
 
         <UColorModeButton />
       </template>

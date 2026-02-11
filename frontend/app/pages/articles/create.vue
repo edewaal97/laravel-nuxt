@@ -4,10 +4,10 @@ const toast = useToast()
 
 const form = reactive({
   title: '',
-  body: '',
+  body: ''
 })
 
-const isLoading = ref(false);
+const isLoading = ref(false)
 const errors = ref<Record<string, string[]>>({})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
@@ -25,7 +25,7 @@ async function createArticle() {
   try {
     await $apiFetch('/api/articles', {
       method: 'POST',
-      body: form,
+      body: form
     })
 
     form.title = ''
@@ -51,7 +51,7 @@ async function createArticle() {
     }
 
     if (e.response?._data?.errors) {
-      errors.value = e.response._data.errors;
+      errors.value = e.response._data.errors
     }
   } finally {
     isLoading.value = false
@@ -61,26 +61,38 @@ async function createArticle() {
 
 <template>
   <UContainer>
-    <UForm :state="form" @submit="createArticle" class="space-y-4">
-      <UFormField label="Titel" :error="getError('title') || getError('slug')">
+    <UForm
+      :state="form"
+      class="space-y-4"
+      @submit="createArticle"
+    >
+      <UFormField
+        label="Titel"
+        :error="getError('title') || getError('slug')"
+      >
         <UInput
           v-model="form.title"
           name="title"
         />
       </UFormField>
 
-      <UFormField label="Body" :error="getError('body')">
+      <UFormField
+        label="Body"
+        :error="getError('body')"
+      >
         <Editor
+          id="body"
           v-model="form.body"
           name="body"
-          id="body"
         />
       </UFormField>
 
       <UButton
         type="submit"
         :loading="isLoading"
-      >Maak artikel</UButton>
+      >
+        Maak artikel
+      </UButton>
     </UForm>
   </UContainer>
 </template>

@@ -11,7 +11,7 @@ export const useAuth = () => {
     }
   }
 
-  const setUser = (userdata: any)  => {
+  const setUser = (userdata: any) => {
     user.value = userdata
   }
 
@@ -24,6 +24,6 @@ export const useAuth = () => {
     isLoggedIn,
     fetchUser,
     setUser,
-    clearUser,
+    clearUser
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import { UButton } from "#components";
+import { UButton } from '#components'
 
 const { $apiFetch } = useNuxtApp()
 const { isLoggedIn } = useAuth()
@@ -13,13 +13,13 @@ useSeoMeta({
 })
 
 const {
-  data:articles,
+  data: articles,
   status,
   error,
   refresh
 } = await useFetch<Article[]>('/api/articles', {
   $fetch: $apiFetch,
-  transform: (response) => response.data
+  transform: response => response.data
 })
 
 const deletingId = ref<string | null>(null)
@@ -43,15 +43,17 @@ async function onDelete(slug: string) {
 }
 
 const columns: TableColumn<Article>[] = [
-  { accessorKey: 'id', header: '#', },
-  { accessorKey: 'title', header: 'Titel', },
-  { id: 'actions', header: 'Acties', },
+  { accessorKey: 'id', header: '#' },
+  { accessorKey: 'title', header: 'Titel' },
+  { id: 'actions', header: 'Acties' }
 ]
 </script>
 
 <template>
   <div class="container">
-    <div v-if="status === 'pending'">Loading posts...</div>
+    <div v-if="status === 'pending'">
+      Loading posts...
+    </div>
     <div v-else-if="status === 'error'">
       <p>Error loading data: {{ error.message }}</p>
     </div>
@@ -59,8 +61,11 @@ const columns: TableColumn<Article>[] = [
     <div v-else>
       <UContainer>
         <UPageSection title="Article List">
-          <UTable :data="articles" :columns="columns" class="flex-1">
-
+          <UTable
+            :data="articles"
+            :columns="columns"
+            class="flex-1"
+          >
             <template #actions-cell="{ row: { original: article } }">
               <div class="flex gap-2">
                 <UButton
@@ -83,10 +88,14 @@ const columns: TableColumn<Article>[] = [
             <template #title-cell="{ row: { original: article } }">
               <ULink :to="`/articles/${article.slug}`">{{ article.title }}</ULink>
             </template>
-
           </UTable>
         </UPageSection>
-        <uButton to="/articles/create" color="primary">Artikel Toevoegen</uButton>
+        <uButton
+          to="/articles/create"
+          color="primary"
+        >
+          Artikel Toevoegen
+        </uButton>
       </UContainer>
     </div>
   </div>

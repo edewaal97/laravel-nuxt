@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { EditorToolbarItem } from '@nuxt/ui'
 
-const model = defineModel<string>();
+const model = defineModel<string>()
 
 const items: EditorToolbarItem[][] = [
   [
@@ -75,7 +75,15 @@ const items: EditorToolbarItem[][] = [
 </script>
 
 <template>
-  <UEditor v-slot="{ editor }" v-model="model" content-type="html" class="w-full min-h-21 border-purple-500 border-2">
-    <UEditorToolbar :editor="editor" :items="items" />
+  <UEditor
+    v-slot="{ editor }"
+    v-model="model"
+    content-type="html"
+    class="w-full min-h-21 border-purple-500 border-2"
+  >
+    <UEditorToolbar
+      :editor="editor"
+      :items="items"
+    />
   </UEditor>
 </template>

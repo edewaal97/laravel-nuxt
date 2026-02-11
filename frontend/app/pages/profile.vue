@@ -14,7 +14,7 @@ useSeoMeta({
 <template>
   <UContainer>
     <pre>
-      Name: {{user?.name}}
+      Name: {{ user?.name }}
       E-mailadres: {{ user?.email }}
     </pre>
   </UContainer>

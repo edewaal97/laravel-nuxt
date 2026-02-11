@@ -8,11 +8,11 @@ const toast = useToast()
 
 const form = reactive({
   email: '',
-  password: '',
+  password: ''
 })
 
-const isLoading = ref(false);
-const errors = ref<Record<string, string[]>>({});
+const isLoading = ref(false)
+const errors = ref<Record<string, string[]>>({})
 const title = ref('Login')
 
 useSeoMeta({
@@ -33,7 +33,7 @@ async function login() {
   try {
     await $apiFetch('/login', {
       method: 'POST',
-      body: form,
+      body: form
     })
 
     const user = await $apiFetch('/api/user')
@@ -46,12 +46,11 @@ async function login() {
       color: 'success'
     })
 
-    await navigateTo( '/' )
+    await navigateTo('/')
   } catch (e: any) {
     if (e.response?._data?.errors) {
-      errors.value = e.response._data.errors;
+      errors.value = e.response._data.errors
     }
-
   } finally {
     isLoading.value = false
   }
@@ -60,15 +59,25 @@ async function login() {
 
 <template>
   <UContainer>
-    <UForm :state="form" @submit="login" class="space-y-4">
-      <UFormField label="E-mailadres" :error="getError('email')">
+    <UForm
+      :state="form"
+      class="space-y-4"
+      @submit="login"
+    >
+      <UFormField
+        label="E-mailadres"
+        :error="getError('email')"
+      >
         <UInput
           v-model="form.email"
           name="email"
         />
       </UFormField>
 
-      <UFormField label="password" :error="getError('password')">
+      <UFormField
+        label="password"
+        :error="getError('password')"
+      >
         <UInput
           v-model="form.password"
           name="password"
@@ -76,12 +85,10 @@ async function login() {
         />
       </UFormField>
 
-      <UButton type="submit">Login</UButton>
-
+      <UButton type="submit">
+        Login
+      </UButton>
     </UForm>
-
-
-
   </UContainer>
 </template>
 
