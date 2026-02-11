@@ -7,11 +7,14 @@ use App\Http\Requests\ArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
     public function store(ArticleRequest $request)
     {
+        Gate::authorize('create', Article::class);
+
         $article = Article::create($request->validated());
 
         return (new ArticleResource($article))
@@ -21,6 +24,8 @@ class ArticleController extends Controller
 
     public function update(ArticleRequest $request, Article $article)
     {
+        Gate::authorize('update', $article);
+
         $article->update($request->validated());
 
         return (new ArticleResource($article))
@@ -30,6 +35,8 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
+        Gate::authorize('destroy', $article);
+
         $article->delete();
         return response()->noContent();
     }

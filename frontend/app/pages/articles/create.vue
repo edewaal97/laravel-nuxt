@@ -37,8 +37,19 @@ async function createArticle() {
       color: 'success'
     })
 
-    await navigateTo('/articles' )
+    await navigateTo('/articles')
   } catch (e: any) {
+    const statusCode = e.response?.status
+
+    if (statusCode === 403) {
+      toast.add({
+        title: 'Error 403 Forbidden',
+        description: 'Je hebt geen rechten om een artikel toe te voegen',
+        color: 'error'
+      })
+      return navigateTo('/articles')
+    }
+
     if (e.response?._data?.errors) {
       errors.value = e.response._data.errors;
     }

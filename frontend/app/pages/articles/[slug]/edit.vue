@@ -22,6 +22,11 @@ if (error.value) {
   const statusCode = error.value.statusCode || error.value.response?.status
 
   if (statusCode === 404) {
+    toast.add({
+      title: '404 not found',
+      description: `Dit artikel (${route.params.slug}) kan niet gevonden worden.`,
+      color: 'success'
+    })
     await navigateTo('/articles' )
   }
 }
@@ -58,6 +63,18 @@ async function updateArticle() {
 
     await navigateTo('/articles' )
   } catch (e: any) {
+    const statusCode = e.response?.status
+
+    if (statusCode === 403) {
+      toast.add({
+        title: 'Error 403 Forbidden',
+        description: 'Je hebt geen rechten om dit arikel te bewerken',
+        color: 'error'
+      })
+      return navigateTo('/articles')
+
+    }
+
     if (e.response?._data?.errors) {
       errors.value = e.response._data.errors
     }
