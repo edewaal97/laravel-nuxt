@@ -1,22 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
-class ArticleRequest extends FormRequest
+final class ArticleRequest extends FormRequest
 {
-    protected function prepareForValidation(): void
-    {
-        // If the user didn't provide a slug, generate one from the title
-        // so that the 'unique' rule below can actually check it.
-        if (!$this->has('slug') || empty($this->slug)) {
-            $this->merge([
-                'slug' => \Illuminate\Support\Str::slug($this->title),
-            ]);
-        }
-    }
-
     public function rules(): array
     {
         $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
@@ -35,10 +27,21 @@ class ArticleRequest extends FormRequest
                 $isUpdate ? 'sometimes' : 'required',
                 'string',
             ],
-            'slug'  => [
+            'slug' => [
                 'required',
-                "unique:articles,slug,{$articleId}"
+                "unique:articles,slug,{$articleId}",
             ],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        // If the user didn't provide a slug, generate one from the title
+        // so that the 'unique' rule below can actually check it.
+        if (! $this->has('slug') || empty($this->slug)) {
+            $this->merge([
+                'slug' => Str::slug($this->title),
+            ]);
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +11,7 @@ use App\Models\Article;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-class ArticleController extends Controller
+final class ArticleController extends Controller
 {
     public function store(ArticleRequest $request)
     {
@@ -38,6 +40,7 @@ class ArticleController extends Controller
         Gate::authorize('delete', $article);
 
         $article->delete();
+
         return response()->noContent();
     }
 }
