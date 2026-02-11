@@ -1,7 +1,15 @@
+<script setup>
+const title = ref('About')
+
+useSeoMeta({
+  title
+})
+</script>
+
 <template>
   <div>
     <UPageHero
-      title="About"
+      :title="`${title}`"
       description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
     />
 

@@ -14,6 +14,11 @@ const form = reactive({
 
 const isLoading = ref(false);
 const errors = ref<Record<string, string[]>>({});
+const title = ref('Login')
+
+useSeoMeta({
+  title
+})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
 

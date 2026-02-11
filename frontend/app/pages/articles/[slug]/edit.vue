@@ -14,20 +14,32 @@ const errors = ref<Record<string, string[]>>({})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
 
-const {
-  data,
-  status,
-  error
-} = await useAsyncData(`article-${route.params.slug}`, () =>
-  $apiFetch(`/api/articles/${route.params.slug}`)
+const { data, status, error } = await useAsyncData(
+  `article-${route.params.slug}`,
+  () => $apiFetch(`/api/articles/${route.params.slug}`)
 )
+
+if (error.value) {
+  const statusCode = error.value.statusCode || error.value.response?.status
+
+  if (statusCode === 404) {
+    await navigateTo('/articles' )
+  }
+}
+
+const title = ref('Edit Article')
 
 if (data.value) {
   Object.assign(form, {
     title: data.value.data.title,
     body: data.value.data.body,
   })
+  title.value = `'Edit Article ${data.value.data.title}'`
 }
+
+useSeoMeta({
+  title
+})
 
 async function updateArticle() {
   isLoading.value = true

@@ -4,7 +4,11 @@ definePageMeta({
 })
 
 const { user } = useAuth()
+const title = ref('Profiel')
 
+useSeoMeta({
+  title
+})
 </script>
 
 <template>

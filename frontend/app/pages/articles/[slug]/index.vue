@@ -10,6 +10,21 @@ const {
   $fetch: $apiFetch,
   transform: (response) => response.data
 })
+
+if (error.value) {
+  const statusCode = error.value.statusCode || error.value.response?.status
+
+  if (statusCode === 404) {
+    await navigateTo('/articles' )
+  }
+}
+
+const title = ref(`${article.value.title}`)
+
+useSeoMeta({
+  title
+})
+
 </script>
 
 <template>
@@ -23,7 +38,7 @@ const {
         <UContainer>
           <UPageSection :title="`${article.title}`">
             <img
-              class="mx-auto"
+              class="mx-auto rounded-lg shadow-lg"
               :src="`${article.banner_image}`"
               :alt="`banner image for ${article.title}`"
             >
@@ -33,7 +48,3 @@ const {
       </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

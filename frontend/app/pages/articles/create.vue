@@ -13,6 +13,12 @@ const errors = ref<Record<string, string[]>>({})
 
 const getError = (path: string) => errors.value?.[path]?.[0]
 
+const title = ref('Artikel toevoegen')
+
+useSeoMeta({
+  title
+})
+
 async function createArticle() {
   isLoading.value = true
   errors.value = {}

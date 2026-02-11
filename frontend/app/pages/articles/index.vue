@@ -5,6 +5,11 @@ import { UButton } from "#components";
 const { $apiFetch } = useNuxtApp()
 
 const toast = useToast()
+const title = ref('Artikelen')
+
+useSeoMeta({
+  title
+})
 
 const {
   data:articles,
