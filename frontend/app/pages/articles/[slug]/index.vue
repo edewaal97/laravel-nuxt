@@ -40,6 +40,7 @@ useSeoMeta({
         <UPageSection :title="`${article.title}`">
           <img
             class="mx-auto rounded-lg shadow-lg"
+            v-if="!!article.banner_image"
             :src="`${article.banner_image}`"
             :alt="`banner image for ${article.title}`"
           >
