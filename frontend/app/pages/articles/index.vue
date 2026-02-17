@@ -91,6 +91,7 @@ const columns: TableColumn<Article>[] = [
           </UTable>
         </UPageSection>
         <uButton
+          v-if="isLoggedIn"
           to="/articles/create"
           color="primary"
         >
