@@ -5,7 +5,8 @@ const toast = useToast()
 
 const form = reactive({
   title: '',
-  body: ''
+  body: '',
+  fileInput: null
 })
 
 const isLoading = ref(false)
@@ -38,7 +39,7 @@ if (data.value) {
     title: data.value.data.title,
     body: data.value.data.body
   })
-  title.value = `'Edit Article ${data.value.data.title}'`
+  title.value = `Edit Article ${data.value.data.title}`
 }
 
 useSeoMeta({
@@ -49,10 +50,21 @@ async function updateArticle() {
   isLoading.value = true
   errors.value = {}
 
+  const formData = new FormData()
+  formData.append('title', form.title)
+  formData.append('body', form.body)
+  formData.append('_method', 'PUT')
+
+  if (form.fileInput) {
+    formData.append('banner_image_upload', form.fileInput)
+  }
+
+  // TODO: build something to remove image
+
   try {
     await $apiFetch(`/api/articles/${route.params.slug}`, {
-      method: 'PUT',
-      body: form
+      method: 'POST',
+      body: formData,
     })
 
     toast.add({
@@ -130,6 +142,25 @@ async function updateArticle() {
             v-model="form.body"
             name="body"
           />
+        </UFormField>
+
+        <img
+          v-if="data.data.banner_image"
+          :src="data.data.banner_image"
+          class="max-w-96"
+        />
+
+        <UFormField
+          label="Banner afbeelding"
+          :error="getError('banner_image_upload')"
+        >
+            <UFileUpload
+              icon="i-lucide-image"
+              label="Drop your image here"
+              description="SVG, PNG, JPG or GIF (max. 2MB)"
+              class="max-w-96 min-h-48"
+              v-model="form.fileInput"
+            />
         </UFormField>
 
         <pre>{{ form.body }}</pre>

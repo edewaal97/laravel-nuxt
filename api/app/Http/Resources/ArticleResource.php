@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 use Override;
 
 /**
@@ -29,10 +30,23 @@ final class ArticleResource extends JsonResource
         ];
 
         return array_merge($base, $request->routeIs('articles.show') ? [
-            'banner_image' => $this->banner_image,
+            'banner_image' => $this->formatBannerImage($this->banner_image),
             'body' => $this->body,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ] : []);
+    }
+
+    protected function formatBannerImage(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        return asset($path);
     }
 }

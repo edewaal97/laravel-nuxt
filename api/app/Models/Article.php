@@ -38,5 +38,5 @@ final class Article extends Model
     /** @use HasFactory<ArticleFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'body', 'user_id', 'slug'];
+    protected $fillable = ['title', 'body', 'user_id', 'slug', 'banner_image'];
 }

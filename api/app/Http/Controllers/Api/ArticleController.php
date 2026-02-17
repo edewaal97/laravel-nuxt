@@ -28,7 +28,19 @@ final class ArticleController extends Controller
     {
         Gate::authorize('update', $article);
 
-        $article->update($request->validated());
+        $data = $request->safe()->only(['title', 'body', 'slug']);
+
+        if ($request->hasFile('banner_image_upload')) {
+            $data['banner_image'] = $request->file('banner_image_upload')->store(
+                path: 'images',
+                options: [
+                    'disk' => 'public',
+                    'visibility' => 'public',
+                ]
+            );
+        }
+
+        $article->update($data);
 
         return (new ArticleResource($article))
             ->response()

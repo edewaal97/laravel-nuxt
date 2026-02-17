@@ -31,6 +31,10 @@ final class ArticleRequest extends FormRequest
                 'required',
                 "unique:articles,slug,{$articleId}",
             ],
+            'banner_image_upload' => [
+                'sometimes',
+                'image',
+            ],
         ];
     }
 
