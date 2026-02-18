@@ -42,9 +42,7 @@ final class ArticleController extends Controller
 
         $article->update($data);
 
-        return (new ArticleResource($article))
-            ->response()
-            ->setStatusCode(Response::HTTP_ACCEPTED);
+        return new ArticleResource($article);
     }
 
     public function destroy(Article $article)
