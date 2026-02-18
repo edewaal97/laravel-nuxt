@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\CreateArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Response;
@@ -13,10 +14,8 @@ use Illuminate\Support\Facades\Gate;
 
 final class ArticleController extends Controller
 {
-    public function store(ArticleRequest $request)
+    public function store(CreateArticleRequest $request)
     {
-        Gate::authorize('create', Article::class);
-
         $article = Article::create($request->validated());
 
         return (new ArticleResource($article))
@@ -24,10 +23,8 @@ final class ArticleController extends Controller
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function update(ArticleRequest $request, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article)
     {
-        Gate::authorize('update', $article);
-
         $data = $request->safe()->only(['title', 'body', 'slug']);
 
         if ($request->hasFile('banner_image_upload')) {

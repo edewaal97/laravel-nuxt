@@ -4,32 +4,31 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\Article;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-final class ArticleRequest extends FormRequest
+/** @mixin Article */
+class BaseArticleRequest extends FormRequest
 {
+    public function article(): ?Article
+    {
+        $article = $this->route('article');
+        return $article instanceof Article ? $article : null;
+    }
+
     public function rules(): array
     {
-        $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
-
-        $article = $this->route('article');
-
-        $articleId = $article instanceof \App\Models\Article ? $article->id : null;
-
         return [
             'title' => [
-                $isUpdate ? 'sometimes' : 'required',
                 'string',
                 'max:255',
             ],
             'body' => [
-                $isUpdate ? 'sometimes' : 'required',
                 'string',
             ],
             'slug' => [
-                $isUpdate ? 'sometimes' : 'required',
-                "unique:articles,slug,{$articleId}",
+                "unique:articles,slug,{$this->article()?->id}",
             ],
             'banner_image_upload' => [
                 'sometimes',
