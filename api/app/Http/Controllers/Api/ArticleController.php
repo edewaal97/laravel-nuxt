@@ -31,6 +31,7 @@ final class ArticleController extends Controller
         $data = $request->safe()->only(['title', 'body', 'slug']);
 
         if ($request->hasFile('banner_image_upload')) {
+            // TODO: remove original banner_image from disk
             $data['banner_image'] = $request->file('banner_image_upload')->store(
                 path: 'images',
                 options: [
@@ -38,6 +39,11 @@ final class ArticleController extends Controller
                     'visibility' => 'public',
                 ]
             );
+        }
+
+        if ($request->has('banner_image_upload') && empty($request->banner_image_upload)) {
+            // TODO: remove original banner_image from disk
+            $data['banner_image'] = null;
         }
 
         $article->update($data);

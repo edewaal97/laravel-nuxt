@@ -28,12 +28,13 @@ final class ArticleRequest extends FormRequest
                 'string',
             ],
             'slug' => [
-                'required',
+                $isUpdate ? 'sometimes' : 'required',
                 "unique:articles,slug,{$articleId}",
             ],
             'banner_image_upload' => [
                 'sometimes',
                 'image',
+                'nullable',
             ],
         ];
     }

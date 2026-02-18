@@ -2,6 +2,7 @@
 
 use App\Models\Article;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 it('can update an article', function () {
@@ -85,10 +86,62 @@ it('requires a body', function () {
 
     expect($response->status())->toBe(422)
         ->and($response->json('errors'))
-        ->toBeArray()
-        ->toHaveKey('body')
-        ->not()->toHaveKey('title')
+            ->toBeArray()
+            ->toHaveKey('body')
+            ->not()->toHaveKey('title')
         ->and(Article::count())->toBe(1)
         ->and($article->title)->toBe('Original Title')
         ->and($article->body)->toBe('Original Body');
+});
+
+it('can upload a banner image', function () {
+    $user = User::factory()->create();
+    $article = Article::factory()->create([]);
+    Storage::fake('public');
+
+    $image = UploadedFile::fake()->image('image.jpg');
+
+    $response = $this->actingAs($user)->putJson('/api/articles/'.$article->slug, [
+        'banner_image_upload' => $image,
+    ]);
+
+    $article->refresh();
+
+    expect($response->status())->toBe(200)
+        ->and(Article::count())->toBe(1)
+        ->and($article->banner_image)->toBe('images/'.$image->hashName());
+});
+
+it('can remove a banner image', function () {
+    $user = User::factory()->create();
+    $article = Article::factory()->create([]);
+
+    $response = $this->actingAs($user)->putJson('/api/articles/'.$article->slug, [
+        'banner_image_upload' => '',
+    ]);
+
+    $article->refresh();
+
+    expect($response->status())->toBe(200)
+        ->and(Article::count())->toBe(1)
+        ->and($article->banner_image)->toBeNull();
+});
+
+it('does not remove banner image if not in request', function () {
+    $user = User::factory()->create();
+    $article = Article::factory()->create([
+        'body' => 'Original Body',
+        'banner_image' => 'https://example.com/image.jpg',
+    ]);
+
+    $response = $this->actingAs($user)->putJson('/api/articles/'.$article->slug, [
+        'body' => 'New body',
+    ]);
+
+    $article->refresh();
+
+    expect($response->status())->toBe(200)
+        ->and(Article::count())->toBe(1)
+        ->and($article->banner_image)->toBe('https://example.com/image.jpg')
+        ->and($article->body)->toBe('New body');
 });

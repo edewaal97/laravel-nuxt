@@ -6,7 +6,8 @@ const toast = useToast()
 const form = reactive({
   title: '',
   body: '',
-  fileInput: null
+  banner_image_upload: null,
+  remove_banner_image: false
 })
 
 const isLoading = ref(false)
@@ -55,8 +56,12 @@ async function updateArticle() {
   formData.append('body', form.body)
   formData.append('_method', 'PUT')
 
-  if (form.fileInput) {
-    formData.append('banner_image_upload', form.fileInput)
+  if (form.banner_image_upload) {
+    formData.append('banner_image_upload', form.banner_image_upload)
+  }
+
+  if (form.remove_banner_image) {
+    formData.append('banner_image_upload', '')
   }
 
   // TODO: build something to remove image
@@ -151,15 +156,27 @@ async function updateArticle() {
         />
 
         <UFormField
-          label="Banner afbeelding"
+          v-if="data.data.banner_image"
+        >
+          <UCheckbox
+            label="Huidige bannerafbeelding verwijderen"
+            v-model="form.remove_banner_image"
+            icon="i-lucide-trash-2"
+            color="error"
+          />
+        </UFormField>
+
+        <UFormField
+          label="Bannerafbeelding"
           :error="getError('banner_image_upload')"
+          v-if="!form.remove_banner_image"
         >
             <UFileUpload
               icon="i-lucide-image"
               label="Drop your image here"
               description="SVG, PNG, JPG or GIF (max. 2MB)"
               class="max-w-96 min-h-48"
-              v-model="form.fileInput"
+              v-model="form.banner_image_upload"
             />
         </UFormField>
 
