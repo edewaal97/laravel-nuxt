@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 it('can update an article', function () {
@@ -114,7 +117,13 @@ it('can upload a banner image', function () {
 
 it('can remove a banner image', function () {
     $user = User::factory()->create();
-    $article = Article::factory()->create([]);
+    Storage::fake('public');
+    $originalBannerImage = UploadedFile::fake()->image('original.jpg');
+    $originalImageStoredPath = $originalBannerImage->store(path: 'images', options: 'public');
+
+    $article = Article::factory()->create(['banner_image' => $originalImageStoredPath]);
+
+    expect(Storage::disk('public')->exists($originalImageStoredPath))->toBeTrue();
 
     $response = $this->actingAs($user)->putJson('/api/articles/'.$article->slug, [
         'banner_image_upload' => '',
@@ -124,14 +133,20 @@ it('can remove a banner image', function () {
 
     expect($response->status())->toBe(200)
         ->and(Article::count())->toBe(1)
-        ->and($article->banner_image)->toBeNull();
+        ->and($article->banner_image)->toBeNull()
+        ->and(Storage::disk('public')->exists($originalImageStoredPath))->toBeFalse();
 });
 
 it('does not remove banner image if not in request', function () {
     $user = User::factory()->create();
+
+    Storage::fake('public');
+    $originalBannerImage = UploadedFile::fake()->image('original.jpg');
+    $originalImageStoredPath = $originalBannerImage->store(path: 'images', options: 'public');
+
     $article = Article::factory()->create([
         'body' => 'Original Body',
-        'banner_image' => 'https://example.com/image.jpg',
+        'banner_image' => $originalImageStoredPath,
     ]);
 
     $response = $this->actingAs($user)->putJson('/api/articles/'.$article->slug, [
@@ -142,6 +157,8 @@ it('does not remove banner image if not in request', function () {
 
     expect($response->status())->toBe(200)
         ->and(Article::count())->toBe(1)
-        ->and($article->banner_image)->toBe('https://example.com/image.jpg')
-        ->and($article->body)->toBe('New body');
+        ->and($article->banner_image)->toBe($originalImageStoredPath)
+        ->and($article->body)->toBe('New body')
+        ->and(Storage::disk('public')->exists($originalImageStoredPath))->toBeTrue();
 });
+

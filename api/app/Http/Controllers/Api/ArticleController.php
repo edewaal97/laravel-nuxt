@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\CreateArticleAction;
+use App\Actions\DeleteArticleAction;
+use App\Actions\UpdateArticleAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
@@ -14,45 +17,32 @@ use Illuminate\Support\Facades\Gate;
 
 final class ArticleController extends Controller
 {
-    public function store(CreateArticleRequest $request)
+    public function store(CreateArticleRequest $request, CreateArticleAction $action)
     {
-        $article = Article::create($request->validated());
+        $article = $action->handle($request->validated());
 
         return (new ArticleResource($article))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function update(UpdateArticleRequest $request, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article, UpdateArticleAction $action)
     {
-        $data = $request->safe()->only(['title', 'body', 'slug']);
-
-        if ($request->hasFile('banner_image_upload')) {
-            // TODO: remove original banner_image from disk
-            $data['banner_image'] = $request->file('banner_image_upload')->store(
-                path: 'images',
-                options: [
-                    'disk' => 'public',
-                    'visibility' => 'public',
-                ]
-            );
-        }
-
-        if ($request->has('banner_image_upload') && empty($request->banner_image_upload)) {
-            // TODO: remove original banner_image from disk
-            $data['banner_image'] = null;
-        }
-
-        $article->update($data);
+        $article = $action->handle(
+            article: $article,
+            attributes: $request->safe()->only(['title', 'body', 'slug']),
+            bannerImage: $request->file('banner_image_upload'),
+            removeBannerImage: $request->has('banner_image_upload') && ! $request->filled('banner_image_upload')
+        );
 
         return new ArticleResource($article);
     }
 
-    public function destroy(Article $article)
+    public function destroy(Article $article, DeleteArticleAction $action)
     {
         Gate::authorize('delete', $article);
 
-        $article->delete();
+        $action->handle($article);
 
         return response()->noContent();
     }
