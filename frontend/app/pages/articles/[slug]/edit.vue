@@ -64,8 +64,6 @@ async function updateArticle() {
     formData.append('banner_image_upload', '')
   }
 
-  // TODO: build something to remove image
-
   try {
     await $apiFetch(`/api/articles/${route.params.slug}`, {
       method: 'POST',

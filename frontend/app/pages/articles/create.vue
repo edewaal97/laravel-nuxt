@@ -4,7 +4,8 @@ const toast = useToast()
 
 const form = reactive({
   title: '',
-  body: ''
+  body: '',
+  banner_image_upload: null
 })
 
 const isLoading = ref(false)
@@ -22,10 +23,18 @@ async function createArticle() {
   isLoading.value = true
   errors.value = {}
 
+  const formData = new FormData()
+  formData.append('title', form.title)
+  formData.append('body', form.body)
+
+  if (form.banner_image_upload) {
+    formData.append('banner_image_upload', form.banner_image_upload)
+  }
+
   try {
     await $apiFetch('/api/articles', {
       method: 'POST',
-      body: form
+      body: formData
     })
 
     form.title = ''
@@ -87,6 +96,19 @@ async function createArticle() {
         />
       </UFormField>
 
+      <UFormField
+        label="Bannerafbeelding"
+        :error="getError('banner_image_upload')"
+      >
+        <UFileUpload
+          icon="i-lucide-image"
+          label="Drop your image here"
+          description="SVG, PNG, JPG or GIF (max. 2MB)"
+          class="max-w-96 min-h-48"
+          v-model="form.banner_image_upload"
+        />
+      </UFormField>
+
       <UButton
         type="submit"
         :loading="isLoading"
@@ -96,7 +118,3 @@ async function createArticle() {
     </UForm>
   </UContainer>
 </template>
-
-<style scoped>
-
-</style>

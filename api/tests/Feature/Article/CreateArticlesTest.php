@@ -2,6 +2,8 @@
 
 use App\Models\Article;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 it('can create an article', function () {
@@ -66,4 +68,23 @@ it('requires a body', function () {
         ->toHaveKey('body')
         ->not()->toHaveKey('title')
         ->and(Article::count())->toBe(0);;
+});
+
+it('can upload a banner image', function () {
+    $user = User::factory()->create();
+    Storage::fake('public');
+    $image = UploadedFile::fake()->image('image.jpg');
+
+    $response = $this->actingAs($user)->postJson('/api/articles', [
+        'title' => Str::random(10),
+        'body' => Str::random(10),
+        'banner_image_upload' => $image,
+    ]);
+
+    $article = Article::first();
+
+    expect($response->status())->toBe(201)
+        ->and(Article::count())->toBe(1)
+        ->and($article->banner_image)->toBe('images/'.$image->hashName())
+        ->and(Storage::disk('public')->exists($article->banner_image))->toBeTrue();
 });

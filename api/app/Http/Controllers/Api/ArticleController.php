@@ -19,7 +19,10 @@ final class ArticleController extends Controller
 {
     public function store(CreateArticleRequest $request, CreateArticleAction $action)
     {
-        $article = $action->handle($request->validated());
+        $article = $action->handle(
+            attributes: $request->safe()->only(['title', 'body', 'slug']),
+            bannerImage: $request->file('banner_image_upload')
+        );
 
         return (new ArticleResource($article))
             ->response()
