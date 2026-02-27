@@ -11,7 +11,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Reddingsark Laravel Nuxt',
+      title: process.env.NUXT_TITLE
+        ? process.env.NUXT_TITLE
+        : 'Laravel Nuxt',
       htmlAttrs: {
         lang: 'nl'
       }
@@ -22,8 +24,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      appName: process.env.NUXT_TITLE || 'Laravel Nuxt',
       apiBase: '', // Default value, overridden by NUXT_PUBLIC_API_BASE
-      frontendUrl: '' // Default value, overridden by NUXT_PUBLIC_FRONTEND_URL
+      frontendUrl: '', // Default value, overridden by NUXT_PUBLIC_FRONTEND_URL
     }
   },
 

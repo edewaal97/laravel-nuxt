@@ -29,9 +29,9 @@ Start the development server on `http://localhost:3000`:
 pnpm dev
 ```
 
-To add the proxy in herd, run the following:
+To add the proxy in herd, run the following, replace example with the correct url obviously:
 ```bash
-herd proxy app.reddingsark-laravel-nuxt-api.test http://localhost:3000
+herd proxy app.example.test http://localhost:3000
 ```
 
 ## Production

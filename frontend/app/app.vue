@@ -3,13 +3,16 @@ const { $apiFetch } = useNuxtApp()
 const { clearUser, fetchUser, isLoggedIn } = useAuth()
 const toast = useToast()
 
+const config = useRuntimeConfig()
+const appName = config.public.appName
+
 onMounted(() => {
   fetchUser()
 })
 
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} - Reddingsark Laravel Nuxt` : 'Reddingsark Laravel Nuxt'
+    return titleChunk ? `${titleChunk} - ${appName}` : appName
   },
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
