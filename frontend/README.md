@@ -21,6 +21,8 @@ Make sure to install the dependencies:
 pnpm install
 ```
 
+Copy the `.env.example` file to `.env` and edit the variables to the correct urls from Herd
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`:
