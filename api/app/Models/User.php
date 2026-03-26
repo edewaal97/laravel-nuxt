@@ -13,13 +13,13 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $email
  * @property Carbon|null $email_verified_at
- * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -35,7 +35,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereId($value)
  * @method static Builder<static>|User whereName($value)
- * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  *
@@ -54,7 +53,6 @@ final class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
     ];
 
     /**
@@ -63,7 +61,6 @@ final class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
@@ -76,7 +73,20 @@ final class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
+    }
+
+    public function generateLoginUrl(?string $redirectTo = null): string
+    {
+        $url = URL::signedRoute(
+            name: 'login.store',
+            parameters: array_filter([
+                'user' => $this->id,
+                'redirectTo' => $redirectTo,
+            ]),
+            expiration: 3600, // one hour in seconds
+        );
+
+        return str_replace(config('app.url'), config('app.frontend_url'), $url);
     }
 }

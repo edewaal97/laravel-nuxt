@@ -7,8 +7,7 @@ const { $apiFetch } = useNuxtApp()
 const toast = useToast()
 
 const form = reactive({
-  email: '',
-  password: ''
+  email: ''
 })
 
 const isLoading = ref(false)
@@ -71,17 +70,6 @@ async function login() {
         <UInput
           v-model="form.email"
           name="email"
-        />
-      </UFormField>
-
-      <UFormField
-        label="password"
-        :error="getError('password')"
-      >
-        <UInput
-          v-model="form.password"
-          name="password"
-          type="password"
         />
       </UFormField>
 

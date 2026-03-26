@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
+use App\Actions\Auth\SendLoginLink;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,6 @@ final class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
         ];
     }
 
@@ -39,19 +40,23 @@ final class LoginRequest extends FormRequest
      *
      * @throws ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(SendLoginLink $sendLoginLinkAction): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        $user = User::query()
+            ->where('email', $this->only('email'))
+            ->first();
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+        if (!$user) {
+            RateLimiter::hit($this->throttleKey());
         }
 
-        RateLimiter::clear($this->throttleKey());
+        if ($user !== null) {
+            $sendLoginLinkAction->handle(user: $user);
+
+            RateLimiter::clear($this->throttleKey());
+        }
     }
 
     /**
@@ -82,6 +87,6 @@ final class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')));
     }
 }
